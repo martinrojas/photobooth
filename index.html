@@ -1,17 +1,35 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>BBDOPhotoboth</title>
-  <link rel="stylesheet" href="styles.css">
-</head>
+	<head>
+		<title>BBDOPhotoboth</title>
+		<!--Import materialize.css-->
+		<link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
 
-<body>
-  <video autoplay poster="camera.png"></video>
-  <p>
-    <button>Enable Camera</button>
-    <select></select>
-  </p>
+		<!--Let browser know website is optimized for mobile-->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 
-  <script src="main.js"></script>
-</body>
+		<link rel="stylesheet" href="css/booth.css">
+	</head>
+
+	<body>
+			<div class="row">
+				<div class="col s12"> 
+					<video id="feed" autoplay class="z-depth-3"></video>
+				</div>
+			</div>
+			<div class="row">
+					<a id="camBtn" class="waves-effect waves-light btn">Enable Camera</a>
+					<div class="divider"></div>
+					<select></select>
+				</div>
+			</div>
+		</div>
+
+
+
+
+		<script src="js/jquery-2.1.1.min.js"></script>
+		<script src="js/materialize.min.js"></script>
+		<script src="js/main.js"></script>
+	</body>
 </html>
