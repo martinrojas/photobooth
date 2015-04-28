@@ -73,7 +73,7 @@ getVideoSources(function(cameras){
 //	if(cameras.length == 1) {
 //		// if only 1 camera is found drop down can be disabled
 //		ddl.disabled = true;
-//		console.log("Only one camera");
+////		console.log("Only one camera");
 //	}
 
 	cameras.forEach(function(camera){
