@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "BBDO Photoboth",
-  "short_name": "BBDOPhotoboth",
+  "short_name": "photoboth",
   "description": "",
   "version": "0.0.1",
   "minimum_chrome_version": "38",
@@ -16,5 +16,7 @@
       "scripts": ["background.js"]
     }
   },
-  "permissions": [ "videoCapture", "syncFileSystem" ]
+  "permissions": [ 
+    "videoCapture" 
+    ]
 }

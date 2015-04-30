@@ -1,0 +1,32 @@
+/* CSS file placeholder. */
+body {
+	background: white;
+	display: -webkit-flex;
+	-webkit-justify-content: center;
+	-webkit-align-items: center;
+	-webkit-flex-direction: column;
+}
+video {
+	width: 1280px;
+	height: 720px;
+	background: white;
+}
+
+select {
+	display: block;
+}
+#pictureTaken {
+	top: 5% !important;
+	height: 75%;
+	max-height: 80%;
+}
+
+
+
+.modal-footer {
+	left: 0;
+}
+
+#c {
+/*	display: none;*/
+}
