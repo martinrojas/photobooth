@@ -14,6 +14,10 @@ function getCamera() {
 	// constraints allow us to select a specific video source 
 	var constraints = {
 		video: {
+			mandatory: {
+				minWidth: 1280,
+				minHeight: 720
+			},
 			optional: [{
 				sourceId: cameraSrcId
 			}]
@@ -58,9 +62,11 @@ function updateButtonState() {
 
 	if((!curStream) || (!curStream.active)) {
 		btn.text("Enable Camera");
+
 	}
 	else {
 		btn.text("Disable Camera"); 
+
 	}
 }
 
@@ -70,15 +76,15 @@ function updateButtonState() {
 
 getVideoSources(function(cameras){
 	var ddl = $('select');
-//	if(cameras.length == 1) {
-//		// if only 1 camera is found drop down can be disabled
-//		ddl.disabled = true;
-////		console.log("Only one camera");
-//	}
+	if(cameras.length == 1) {
+		// if only 1 camera is found drop down can be disabled
+		ddl.disabled = true;
+		//		console.log("Only one camera");
+	}
 
 	cameras.forEach(function(camera){
 		$('<option>').val(camera.id).text(camera.label).appendTo(ddl);
-		
+
 	});   
 }); 
 
@@ -105,6 +111,12 @@ function getVideoSources(callback) {
 	});
 }
 
+/**
+ * This takes a picture and renders it to the canvas
+ */
+
+
+
 $(function() {
 	$('#camBtn').on('click', function(){
 		// camera is active, stop stream
@@ -117,6 +129,19 @@ $(function() {
 		}
 	});
 
+	$('#snapBtn').on('click', function(){
+		var canvas = document.getElementById("snapShot").getContext("2d");
+		var video = document.getElementById("feed");
+		canvas.drawImage(video, 0, 0, 1280, 720, 0, 0, 640, 360);
+		canvas.globalCompositeOperation="source-over";
+		canvas.drawImage(document.getElementById("logo"),30,20,220,26);
+		
+//		var img = canvas.toDataURL("image/png");
+//		document.getElementById('snapShot').src = img;
+		$('#pictureTaken').openModal();
+
+	});
+
 	/**
  * Change stream source according to dropdown selection
  */
@@ -125,4 +150,9 @@ $(function() {
 			getCamera();
 		}
 	});
+
+	$('.modal-trigger').leanModal();
+
+	getCamera();
+
 });

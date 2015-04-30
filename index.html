@@ -11,22 +11,64 @@
 		<link rel="stylesheet" href="css/booth.css">
 	</head>
 
-	<body>
-			<div class="row">
-				<div class="col s12"> 
-					<video id="feed" autoplay class="z-depth-3"></video>
-				</div>
-			</div>
-			<div class="row">
-					<a id="camBtn" class="waves-effect waves-light btn">Enable Camera</a>
-					<div class="divider"></div>
-					<select></select>
-				</div>
+	<body class="blue ">
+		<div class="row">
+			<div class="col s12"> 
+				<video id="feed" autoplay class="z-depth-3"></video>
 			</div>
 		</div>
+		<div class="container">
+			<div class="row">
+				<div class="col s6">
+					<a id="snapBtn" class="waves-effect waves-light btn-large red accent-4"><i class="mdi-image-camera  left"></i>Take Photo</a>
+				</div>
+				<div class="col s6">
+					<a class="btn-floating btn-large waves-effect waves-light red accent-4 modal-trigger" href="#camSettings"><i class="mdi-action-settings"></i></a>
 
+				</div>
+			</div>
+			<div class="row">
+				<canvas id="c" style="display:none;" width="720" height="360"></canvas>
+			</div>
+			
+			<img id="logo" style="display: none;" src="assets/logo.png" alt="">
 
+			<!-- Modal | Camera Settings -->
+			<div id="camSettings" class="modal bottom-sheet">
+				<div class="modal-content container">
+					<div class="row">
+						<div class="col s6">
+							<h4>Modal Header</h4>
+							<a id="camBtn" class="waves-effect waves-light btn">Disable Camera</a>
+							<select></select>
+							<div class="modal-footer">
+							</div>
+						</div>
 
+					</div>
+				</div>
+			</div>
+
+			<div id="pictureTaken" class="modal modal-fixed-footer">
+				<div class="modal-content container">
+					<div class="row">
+						<h4>Post Your Snapshot</h4>
+						<canvas id="snapShot" width="640" height="360"></canvas>
+<!--						<img id="snapShot" src="">-->
+					</div>
+					<div class="row tweet-field">
+						<div class="input-field col s12">
+							<textarea id="textarea1" class="materialize-textarea" length="120"></textarea>
+							<label for="textarea1">Tweet Text</label>
+						</div>
+						<div class="row">
+							<a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Post</a>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
 
 		<script src="js/jquery-2.1.1.min.js"></script>
 		<script src="js/materialize.min.js"></script>
