@@ -9,6 +9,10 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 
 		<link rel="stylesheet" href="css/booth.css">
+		
+		<script src="js/jquery-2.1.1.min.js"></script>
+		<script src="js/materialize.min.js"></script>
+		<script src="js/parse-1.4.2.min.js"></script>
 	</head>
 
 	<body class="blue ">
@@ -30,7 +34,7 @@
 			<div class="row">
 				<canvas id="c" style="display:none;" width="720" height="360"></canvas>
 			</div>
-			
+
 			<img id="logo" style="display: none;" src="assets/logo.png" alt="">
 
 			<!-- Modal | Camera Settings -->
@@ -40,11 +44,13 @@
 						<div class="col s6">
 							<h4>Modal Header</h4>
 							<a id="camBtn" class="waves-effect waves-light btn">Disable Camera</a>
-							<select></select>
+							<select id="camSelect"></select>
 							<div class="modal-footer">
 							</div>
 						</div>
-
+						<div class="col s6">
+						<select id="tweetSelect"></select>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -54,7 +60,7 @@
 					<div class="row">
 						<h4>Post Your Snapshot</h4>
 						<canvas id="snapShot" width="640" height="360"></canvas>
-<!--						<img id="snapShot" src="">-->
+						<!--						<img id="snapShot" src="">-->
 					</div>
 					<div class="row tweet-field">
 						<div class="input-field col s12">
@@ -70,8 +76,8 @@
 
 		</div>
 
-		<script src="js/jquery-2.1.1.min.js"></script>
-		<script src="js/materialize.min.js"></script>
+
+
 		<script src="js/main.js"></script>
 	</body>
 </html>

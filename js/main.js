@@ -7,6 +7,7 @@
  */
 
 var curStream = null; // keep track of current stream
+var oauth_token, oauth_token_secret;
 
 function getCamera() {
 	var cameraSrcId = $('select').value;
@@ -111,13 +112,24 @@ function getVideoSources(callback) {
 	});
 }
 
-/**
- * This takes a picture and renders it to the canvas
- */
+function getAccounts(){
+	var Login = Parse.Object.extend("logins");
+	var accountsQuery = new Parse.Query(Login);
+	accountsQuery.find({
+		success:function(results) {
+			console.log("Total: "+results.length);
+//			results[1].attributes.name
+		},
+		error:function(error) {
+			alert("Error when getting objects!");
+		}
+	});
 
-
+}
 
 $(function() {
+	Parse.initialize("PqtPwDU77RRbNK7xAKJ3RCWAWwaYrkolbTsi7AmY", "2ZWBzjdCeyD64Dlnwkx3f4UlfOTth5hMc0ZY43EZ");
+
 	$('#camBtn').on('click', function(){
 		// camera is active, stop stream
 		if(curStream && curStream.active) {
@@ -135,9 +147,9 @@ $(function() {
 		canvas.drawImage(video, 0, 0, 1280, 720, 0, 0, 640, 360);
 		canvas.globalCompositeOperation="source-over";
 		canvas.drawImage(document.getElementById("logo"),30,20,220,26);
-		
-//		var img = canvas.toDataURL("image/png");
-//		document.getElementById('snapShot').src = img;
+
+		//		var img = canvas.toDataURL("image/png");
+		//		document.getElementById('snapShot').src = img;
 		$('#pictureTaken').openModal();
 
 	});
@@ -145,7 +157,7 @@ $(function() {
 	/**
  * Change stream source according to dropdown selection
  */
-	$('select').on('change',function() {
+	$('#camSelect').on('change',function() {
 		if(curStream && curStream.active) {
 			getCamera();
 		}
@@ -154,5 +166,5 @@ $(function() {
 	$('.modal-trigger').leanModal();
 
 	getCamera();
-
+	getAccounts();
 });
