@@ -1,83 +1,19 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>BBDOPhotoboth</title>
-		<!--Import materialize.css-->
-		<link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+  <head>
+    <meta charset="UTF-8">
+    <title>Hello World!</title>
+  </head>
+  <body>
+    <h1>Hello World!</h1>
+    <!-- All of the Node.js APIs are available in this renderer process. -->
+    We are using node <script>document.write(process.versions.node)</script>,
+    Chromium <script>document.write(process.versions.chrome)</script>,
+    and Electron <script>document.write(process.versions.electron)</script>.
+  </body>
 
-		<!--Let browser know website is optimized for mobile-->
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-
-		<link rel="stylesheet" href="css/booth.css">
-		
-		<script src="js/jquery-2.1.1.min.js"></script>
-		<script src="js/materialize.min.js"></script>
-		<script src="js/parse-1.4.2.min.js"></script>
-	</head>
-
-	<body class="blue ">
-		<div class="row">
-			<div class="col s12"> 
-				<video id="feed" autoplay class="z-depth-3"></video>
-			</div>
-		</div>
-		<div class="container">
-			<div class="row">
-				<div class="col s6">
-					<a id="snapBtn" class="waves-effect waves-light btn-large red accent-4"><i class="mdi-image-camera  left"></i>Take Photo</a>
-				</div>
-				<div class="col s6">
-					<a class="btn-floating btn-large waves-effect waves-light red accent-4 modal-trigger" href="#camSettings"><i class="mdi-action-settings"></i></a>
-
-				</div>
-			</div>
-			<div class="row">
-				<canvas id="c" style="display:none;" width="720" height="360"></canvas>
-			</div>
-
-			<img id="logo" style="display: none;" src="assets/logo.png" alt="">
-
-			<!-- Modal | Camera Settings -->
-			<div id="camSettings" class="modal bottom-sheet">
-				<div class="modal-content container">
-					<div class="row">
-						<div class="col s6">
-							<h4>Modal Header</h4>
-							<a id="camBtn" class="waves-effect waves-light btn">Disable Camera</a>
-							<select id="camSelect"></select>
-							<div class="modal-footer">
-							</div>
-						</div>
-						<div class="col s6">
-						<select id="tweetSelect"></select>
-						</div>
-					</div>
-				</div>
-			</div>
-
-			<div id="pictureTaken" class="modal modal-fixed-footer">
-				<div class="modal-content container">
-					<div class="row">
-						<h4>Post Your Snapshot</h4>
-						<canvas id="snapShot" width="640" height="360"></canvas>
-						<!--						<img id="snapShot" src="">-->
-					</div>
-					<div class="row tweet-field">
-						<div class="input-field col s12">
-							<textarea id="textarea1" class="materialize-textarea" length="120"></textarea>
-							<label for="textarea1">Tweet Text</label>
-						</div>
-						<div class="row">
-							<a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Post</a>
-						</div>
-					</div>
-				</div>
-			</div>
-
-		</div>
-
-
-
-		<script src="js/main.js"></script>
-	</body>
+  <script>
+    // You can also require other files to run in this process
+    require('./renderer.js')
+  </script>
 </html>
