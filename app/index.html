@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>BBDOPhotoboth</title>
+		<title>Photoboth</title>
 		<!--Import materialize.css-->
 		<link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
 
@@ -73,10 +73,15 @@
 			</div>
 
 		</div>
+		<!-- Insert this line above script imports  -->
+		<script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
 
 		<script src="js/jquery-2.1.1.min.js"></script>
 		<script src="js/materialize.min.js"></script>
 		<script src="js/parse-1.4.2.min.js"></script>
 		<script src="js/main.js"></script>
+<!-- Insert this line after script imports -->
+<script>if (window.module) module = window.module;</script>
+
 	</body>
 </html>
