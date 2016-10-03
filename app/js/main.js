@@ -1,10 +1,10 @@
 /**
- * Grabs the camera feed from the browser, requesting
- * video from the selected device. Requires the permissions
- * for videoCapture to be set in the manifest.
- *
- * @see http://developer.chrome.com/apps/manifest.html#permissions
- */
+* Grabs the camera feed from the browser, requesting
+* video from the selected device. Requires the permissions
+* for videoCapture to be set in the manifest.
+*
+* @see http://developer.chrome.com/apps/manifest.html#permissions
+*/
 
 var curStream = null; // keep track of current stream
 var oauth_token, oauth_token_secret;
@@ -12,7 +12,7 @@ var oauth_token, oauth_token_secret;
 function getCamera() {
 	var cameraSrcId = $('select').value;
 
-	// constraints allow us to select a specific video source 
+	// constraints allow us to select a specific video source
 	var constraints = {
 		video: {
 			mandatory: {
@@ -26,7 +26,7 @@ function getCamera() {
 		audio:false
 	}
 
-	navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia
+	navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
 
 	navigator.getUserMedia(constraints, function(stream) {
 		var videoElm = document.querySelector('video');
@@ -43,7 +43,7 @@ function getCamera() {
 			}
 
 			curStream = stream;
-			updateButtonState();  
+			updateButtonState();
 		}
 	}, function(e) {
 		curStream = null;
@@ -55,8 +55,8 @@ function getCamera() {
 
 
 /**
- * Updates button state according to Camera stream status
- */
+* Updates button state according to Camera stream status
+*/
 
 function updateButtonState() {
 	var btn = $('#camBtn');
@@ -66,14 +66,14 @@ function updateButtonState() {
 
 	}
 	else {
-		btn.text("Disable Camera"); 
+		btn.text("Disable Camera");
 
 	}
 }
 
 /**
- * Populate camera sources drop down
- */
+* Populate camera sources drop down
+*/
 
 getVideoSources(function(cameras){
 	var ddl = $('select');
@@ -86,54 +86,61 @@ getVideoSources(function(cameras){
 	cameras.forEach(function(camera){
 		$('<option>').val(camera.id).text(camera.label).appendTo(ddl);
 
-	});   
-}); 
+	});
+});
 
 /**
- * This retrieves video sources and passes them to callback parameter
- */
+* This retrieves video sources and passes them to callback parameter
+*/
 
 function getVideoSources(callback) {
 	var videoSources = [];
 	callback = callback || function(){};
 
-	MediaStreamTrack.getSources(function(sources){
-		sources.forEach(function(source,index){
-			if(source.kind === 'video') {
+	if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
+		console.log("enumerateDevices() not supported.");
+		return;
+	}
+
+	navigator.mediaDevices.enumerateDevices()
+	.then(function(devices) {
+		devices.forEach(function(device) {
+			// console.log(device.kind + ": " + device.label +	" id = " + device.deviceId);
+			if(device.kind === 'videoinput') {
 				// we only need to enlist video sources
 				videoSources.push({
-					id: source.id,
-					label: source.label || 'Camera '+(videoSources.length+1)
-				});  
+					id: device.deviceId,
+					label: device.label || 'Camera '+(videoSources.length+1)
+				});
 			}
+
+			callback(videoSources);
 		});
-
-		callback(videoSources);
-	});
-}
-
-function getAccounts(){
-	var Login = Parse.Object.extend("logins");
-	var accountsQuery = new Parse.Query(Login);
-	accountsQuery.find({
-		success:function(results) {
-			console.log("Total: "+results.length);
-//			results[1].attributes.name
-		},
-		error:function(error) {
-			alert("Error when getting objects!");
-		}
+	})
+	.catch(function(err) {
+		console.log(err.name + ": " + err.message);
 	});
 
+	// MediaStreamTrack.enumerateDevices(function(sources){
+	// 	sources.forEach(function(source,index){
+	// 		if(source.kind === 'video') {
+	// 			// we only need to enlist video sources
+	// 			videoSources.push({
+	// 				id: source.id,
+	// 				label: source.label || 'Camera '+(videoSources.length+1)
+	// 			});
+	// 		}
+	// 	});
+	// 	callback(videoSources);
+	// });
 }
 
 $(function() {
-	Parse.initialize("PqtPwDU77RRbNK7xAKJ3RCWAWwaYrkolbTsi7AmY", "2ZWBzjdCeyD64Dlnwkx3f4UlfOTth5hMc0ZY43EZ");
 
 	$('#camBtn').on('click', function(){
 		// camera is active, stop stream
 		if(curStream && curStream.active) {
-			curStream.stop();
+			curStream.getTracks()[0].stop();
 			$('video').src = "";
 		}
 		else {
@@ -155,8 +162,8 @@ $(function() {
 	});
 
 	/**
- * Change stream source according to dropdown selection
- */
+	* Change stream source according to dropdown selection
+	*/
 	$('#camSelect').on('change',function() {
 		if(curStream && curStream.active) {
 			getCamera();
@@ -166,5 +173,4 @@ $(function() {
 	$('.modal-trigger').leanModal();
 
 	getCamera();
-	getAccounts();
 });
