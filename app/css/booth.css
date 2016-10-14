@@ -30,8 +30,7 @@ body {
 }
 
 video {
-    width: 1280px;
-    height: 720px;
+    width: 95%;
     background: white;
     -webkit-box-shadow: 14px 10px 43px 0px rgba(0, 0, 0, 0.66);
     -moz-box-shadow: 14px 10px 43px 0px rgba(0, 0, 0, 0.66);

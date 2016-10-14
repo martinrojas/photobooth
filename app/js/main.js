@@ -7,6 +7,7 @@ jQuery(function($) {
     var BOOTH = {
         curStream: null,
         snap: 0,
+        videoSources: [],
 
         init: function() {
             BOOTH.bind();
@@ -84,7 +85,7 @@ jQuery(function($) {
 
 
         streamChange: function() {
-            BOOTH.curStream = $('select').value;
+            BOOTH.curStream = $('#camSelect').value;
             if (BOOTH.curStream && BOOTH.curStream.active) {
 
                 BOOTH.getCamera();
@@ -101,6 +102,9 @@ jQuery(function($) {
                         minWidth: 1280,
                         minHeight: 720
                     },
+                    optional: [{
+                      sourceId: $('#camSelect').value
+                    }]
                 },
                 audio: false
             }
@@ -122,7 +126,6 @@ jQuery(function($) {
         },
 
         getVideoSources: function(callback) {
-            var videoSources = [];
             var ddl = $('#camSelect');
 
             callback = callback || function() {};
@@ -138,12 +141,12 @@ jQuery(function($) {
                         // console.log(device.kind + ": " + device.label +	" id = " + device.deviceId);
                         if (device.kind === 'videoinput') {
                             // we only need to enlist video sources
-                            videoSources.push({
+                            BOOTH.videoSources.push({
                                 id: device.deviceId,
-                                label: device.label || 'Camera ' + (videoSources.length + 1)
+                                label: device.label || 'Camera ' + (BOOTH.videoSources.length + 1)
                             });
                             $('<option>').val(device.deviceId).text(device.label).appendTo(ddl);
-                            BOOTH.curStream = videoSources[0].id;
+                            BOOTH.curStream = BOOTH.videoSources[0].id;
                         }
                     });
                 })
