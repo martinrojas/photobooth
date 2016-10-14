@@ -6,14 +6,18 @@ jQuery(function ($) {
 
         init: function () {
             BOOTH.bind();
+            BOOTH.getVideoSources(); 
             BOOTH.getCamera();
+
         },
 
         bind: function () {
             $('.modal-trigger').leanModal();
             $('#snapBtn').on('click', COUNTDOWN.addTimer);
+            $('select').on('change', BOOTH.streamChange);
             BOOTH.canvas = document.getElementById("snapShot").getContext("2d");
             BOOTH.video = document.getElementById("feed");
+
 
         },
 
@@ -31,6 +35,15 @@ jQuery(function ($) {
 
         },
 
+
+        streamChange: function () {
+            BOOTH.curStream = $('select').value;
+            if (BOOTH.curStream && BOOTH.curStream.active) {
+
+                BOOTH.getCamera();
+            }
+        },
+
         getCamera: function () {
             navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
 
@@ -40,7 +53,7 @@ jQuery(function ($) {
                     mandatory: {
                         minWidth: 1280,
                         minHeight: 720
-                    }
+                    },
                 },
                 audio: false
             }
@@ -49,7 +62,7 @@ jQuery(function ($) {
                 var videoElm = document.querySelector('video');
                 videoElm.src = URL.createObjectURL(stream);
 
-                stream.onended = function() {};
+                //                stream.onended = function() {};
 
                 videoElm.onplay = function() {
                     if (BOOTH.curStream !== null) BOOTH.curStream.stop();
@@ -63,6 +76,8 @@ jQuery(function ($) {
 
         getVideoSources: function (callback) {
             var videoSources = [];
+            var ddl = $('#camSelect');
+
             callback = callback || function() {};
 
             if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
@@ -80,15 +95,14 @@ jQuery(function ($) {
                             id: device.deviceId,
                             label: device.label || 'Camera ' + (videoSources.length + 1)
                         });
+                        $('<option>').val(device.deviceId).text(device.label).appendTo(ddl);
+                        BOOTH.curStream = videoSources[0].id;
                     }
-
-                    callback(videoSources);
                 });
             })
                 .catch(function(err) {
                 console.log(err.name + ": " + err.message);
             });
-
         }
     };
 
