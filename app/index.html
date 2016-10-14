@@ -10,6 +10,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
         <link rel="stylesheet" href="css/palette.css">
+        <link rel="stylesheet" href="css/pie_timer.css">
         <link rel="stylesheet" href="css/booth.css">
 
 
@@ -29,14 +30,22 @@
                 </div>
                 <div class="row">
                     <canvas id="c" style="display:none;" width="1280" height="720"></canvas>
-                    <img id="logo" style="display: none;" src="assets/logo.png" alt="">
+                    <img id="moji0" style="display: none;" src="assets/1.png" alt="">
+                    <img id="moji1" style="display: none;" src="assets/2.png" alt="">
+                    <img id="moji2" style="display: none;" src="assets/3.png" alt="">
+                    <img id="moji3" style="display: none;" src="assets/cheers.png" alt="">
                 </div>
             </div>
         </div>
         <div class="step2">
-            <div class="row">
-                <h4>Post Your Snapshot</h4>
-                <canvas id="snapShot" width="1280" height="720"></canvas>
+            <div class="row  snap_display">
+                <a id="moreBtn" class="waves-effect waves-light btn-large accent-color"><i class="mdi-image-camera  left"></i>Take More</a>
+            </div>
+            <div class="row snap_display">
+                <canvas id="snapShot1" width="1280" height="720"></canvas>
+                <canvas id="snapShot2" width="1280" height="720"></canvas>
+                <canvas id="snapShot3" width="1280" height="720"></canvas>
+                <canvas id="snapShot4" width="1280" height="720"></canvas>
                 <!--						<img id="snapShot" src="">-->
             </div>
         </div>
@@ -46,7 +55,7 @@
             <div class="modal-content container">
                 <div class="row">
                     <div class="col s6">
-                        <h4>Camera Feeds</h4>
+                        <h1 class="white-text">Camera Feeds</h1>
                         <select id="camSelect"></select>
                         <div class="modal-footer">
                             <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">OK</a>
@@ -71,11 +80,21 @@
 
 
         <script>
-            const {remote} = require('electron')
-            const {Menu, MenuItem} = remote
+            const {
+                remote
+            } = require('electron')
+            const {
+                Menu,
+                MenuItem
+            } = remote
 
             const menu = new Menu()
-            menu.append(new MenuItem({label: 'cameras', click() { $('#camSettings').openModal(); }}))
+            menu.append(new MenuItem({
+                label: 'cameras',
+                click() {
+                    $('#camSettings').openModal();
+                }
+            }))
 
             window.addEventListener('contextmenu', (e) => {
                 e.preventDefault()

@@ -1,42 +1,89 @@
-jQuery(function ($) {
+var canvasBuffer = require('electron-canvas-to-buffer')
+var fs = require('fs')
+
+jQuery(function($) {
     'use strict';
 
     var BOOTH = {
         curStream: null,
+        snap: 0,
 
-        init: function () {
+        init: function() {
             BOOTH.bind();
-            BOOTH.getVideoSources(); 
+            BOOTH.getVideoSources();
             BOOTH.getCamera();
 
         },
 
-        bind: function () {
+        bind: function() {
             $('.modal-trigger').leanModal();
-            $('#snapBtn').on('click', COUNTDOWN.addTimer);
+            $('#moreBtn').on('click', BOOTH.onMore);
+            $('#snapBtn').on('click', BOOTH.onSnaps);
             $('select').on('change', BOOTH.streamChange);
-            BOOTH.canvas = document.getElementById("snapShot").getContext("2d");
+            BOOTH.canvas = [
+                document.getElementById("snapShot1").getContext("2d"),
+                document.getElementById("snapShot2").getContext("2d"),
+                document.getElementById("snapShot3").getContext("2d"),
+                document.getElementById("snapShot4").getContext("2d")
+            ];
+            BOOTH.canvasId = [
+                document.getElementById("snapShot1"),
+                document.getElementById("snapShot2"),
+                document.getElementById("snapShot3"),
+                document.getElementById("snapShot4")
+            ];
+
             BOOTH.video = document.getElementById("feed");
 
 
         },
+        onMore: function(e) {
+            e.preventDefault();
+            $('.step1').css('height', '100vh');
+            $('.step2').css('height', 0);
+        },
+        onSnaps: function(e) {
+            e.preventDefault();
+            BOOTH.snap = 0;
+            BOOTH.theNextPicture();
+        },
+        theNextPicture: function() {
+            if (BOOTH.snap < 4) {
+                COUNTDOWN.addTimer();
+                setTimeout(function() {
+                    BOOTH.snap++;
+                    BOOTH.theNextPicture();
+                }, 6000);
+            } else if (BOOTH.snap == 4) {
+                $('.step1').css('height', 0);
+                $('.step2').css('height', '100vh');
 
-        takePicture: function () {
+                BOOTH.canvasId.forEach(function(canva) {
+                    var buffer = canvasBuffer(canva, 'image/png')
+                    var d = new Date();
+                    var n = d.getTime();
+                    // write canvas to file
+                    fs.writeFile('./party/' + n + '.png', buffer, function(err) {
+                        throw err;
+                    })
+                })
+            }
+        },
+        takePicture: function() {
 
-            BOOTH.canvas.drawImage(BOOTH.video, 0, 0, 1280, 720, 0, 0, 1280, 720);
-            BOOTH.canvas.globalCompositeOperation = "source-over";
-            BOOTH.canvas.drawImage(document.getElementById("logo"), 30, 20, 220, 26);
+            BOOTH.canvas[BOOTH.snap].drawImage(BOOTH.video, 0, 0, 1280, 720, 0, 0, 1280, 720);
+            BOOTH.canvas[BOOTH.snap].globalCompositeOperation = "source-over";
+            BOOTH.canvas[BOOTH.snap].drawImage(document.getElementById('moji' + BOOTH.snap), 0, 0, 1280, 720, 0, 0, 1280, 720);
 
             //		var img = canvas.toDataURL("image/png");
             //		document.getElementById('snapShot').src = img;
             //            $('#pictureTaken').openModal();
-            $('.step1').css('height', 0);
-            $('.step2').css('height', '100vh');
+
 
         },
 
 
-        streamChange: function () {
+        streamChange: function() {
             BOOTH.curStream = $('select').value;
             if (BOOTH.curStream && BOOTH.curStream.active) {
 
@@ -44,7 +91,7 @@ jQuery(function ($) {
             }
         },
 
-        getCamera: function () {
+        getCamera: function() {
             navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
 
             // constraints allow us to select a specific video source
@@ -65,7 +112,7 @@ jQuery(function ($) {
                 //                stream.onended = function() {};
 
                 videoElm.onplay = function() {
-                    if (BOOTH.curStream !== null) BOOTH.curStream.stop();
+                    if (BOOTH.curStream !== null) BOOTH.curStream.stop;
                     BOOTH.curStream = stream;
                 };
 
@@ -74,7 +121,7 @@ jQuery(function ($) {
             });
         },
 
-        getVideoSources: function (callback) {
+        getVideoSources: function(callback) {
             var videoSources = [];
             var ddl = $('#camSelect');
 
@@ -87,51 +134,51 @@ jQuery(function ($) {
 
             navigator.mediaDevices.enumerateDevices()
                 .then(function(devices) {
-                devices.forEach(function(device) {
-                    // console.log(device.kind + ": " + device.label +	" id = " + device.deviceId);
-                    if (device.kind === 'videoinput') {
-                        // we only need to enlist video sources
-                        videoSources.push({
-                            id: device.deviceId,
-                            label: device.label || 'Camera ' + (videoSources.length + 1)
-                        });
-                        $('<option>').val(device.deviceId).text(device.label).appendTo(ddl);
-                        BOOTH.curStream = videoSources[0].id;
-                    }
-                });
-            })
+                    devices.forEach(function(device) {
+                        // console.log(device.kind + ": " + device.label +	" id = " + device.deviceId);
+                        if (device.kind === 'videoinput') {
+                            // we only need to enlist video sources
+                            videoSources.push({
+                                id: device.deviceId,
+                                label: device.label || 'Camera ' + (videoSources.length + 1)
+                            });
+                            $('<option>').val(device.deviceId).text(device.label).appendTo(ddl);
+                            BOOTH.curStream = videoSources[0].id;
+                        }
+                    });
+                })
                 .catch(function(err) {
-                console.log(err.name + ": " + err.message);
-            });
+                    console.log(err.name + ": " + err.message);
+                });
         }
     };
 
     var COUNTDOWN = {
         timerTxt: "<div class='circle center'><div class='count'>4</div><div class='l-half'></div><div class='r-half'></div></div>",
 
-        init: function () {
+        init: function() {
             COUNTDOWN.bind();
             //            COUNTDOWN.addTimer();
         },
 
-        bind: function () {
+        bind: function() {
             COUNTDOWN.$timer = $('.timer');
         },
 
-        addTimer: function (e) {
-            e.preventDefault();
+        addTimer: function() {
 
             COUNTDOWN.$timer.html(COUNTDOWN.timerTxt);
             COUNTDOWN.timeVal = 4;
             COUNTDOWN.$interval = setInterval(COUNTDOWN.tick, 1000);
         },
 
-        tick: function () {
-            console.log(COUNTDOWN.timeVal);
-            if (COUNTDOWN.timeVal >= 0) { $('.count').html(COUNTDOWN.timeVal); }
-            if (COUNTDOWN.timeVal === 0) { 
+        tick: function() {
+            if (COUNTDOWN.timeVal >= 0) {
+                $('.count').html(COUNTDOWN.timeVal);
+            }
+            if (COUNTDOWN.timeVal === 0) {
                 clearInterval(COUNTDOWN.$interval);
-                BOOTH.takePicture(); 
+                BOOTH.takePicture();
                 COUNTDOWN.$timer.html('');
             }
             COUNTDOWN.timeVal--;

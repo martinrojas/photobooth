@@ -2,16 +2,12 @@
 
 body {
     background: ##388E3C;
-    /* fallback for old browsers */
     background: -webkit-linear-gradient(to left, #388E3C, #4CAF50);
-    /* Chrome 10-25, Safari 5.1-6 */
     background: linear-gradient(to left, #388E3C, #4CAF50);
-    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    display: -webkit-flex;
-    -webkit-justify-content: center;
-    -webkit-align-items: center;
-    -webkit-flex-direction: column;
-    color: #212121;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
 }
 
 .step1 {
@@ -21,17 +17,7 @@ body {
     justify-content: center;
     align-items: center;
     overflow: hidden;
-    transition:ease 1s all;
-}
-
-.step2 {
-    height: 0;
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-    transition:ease 1s all;
+    transition: ease 1s all;
 }
 
 .camHolder {
@@ -47,6 +33,9 @@ video {
     width: 1280px;
     height: 720px;
     background: white;
+    -webkit-box-shadow: 14px 10px 43px 0px rgba(0, 0, 0, 0.66);
+    -moz-box-shadow: 14px 10px 43px 0px rgba(0, 0, 0, 0.66);
+    box-shadow: 14px 10px 43px 0px rgba(0, 0, 0, 0.66);
 }
 
 .overlay {
@@ -63,23 +52,42 @@ video {
     color: white;
 }
 
-svg {
-    position: absolute;
+#snapBtn {
+    padding: 0 25rem;
+    -webkit-box-shadow: 14px 10px 43px 0px rgba(0, 0, 0, 0.36);
+    -moz-box-shadow: 14px 10px 43px 0px rgba(0, 0, 0, 0.36);
+    box-shadow: 14px 10px 43px 0px rgba(0, 0, 0, 0.36);
+}
+
+.step2 {
+    height: 0;
+    position: relative;
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+    transition: ease 1s all;
+}
+
+.snap_display {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+canvas {
+    width: 33%;
+    margin: 1%;
+    -webkit-box-shadow: 14px 10px 43px 0px rgba(0, 0, 0, 0.66);
+    -moz-box-shadow: 14px 10px 43px 0px rgba(0, 0, 0, 0.66);
+    box-shadow: 14px 10px 43px 0px rgba(0, 0, 0, 0.66);
 }
 
 .nextStep {
     visibility: hidden;
-}
-
-#svgAnim path {
-    stroke-dasharray: 100;
-    animation: dash 2.5s linear infinite;
-}
-
-@keyframes dash {
-    to {
-        stroke-dashoffset: 400;
-    }
 }
 
 select {
@@ -103,115 +111,4 @@ countdown-timer {
 
 .modal-footer {
     left: 0;
-}
-
-
-/*
-*
-* Pie Timer CSS
-*
-*/
-
-.timer {
-    position: relative;
-    margin-top: 30%;
-}
-
-.center {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin-top: -200px;
-    margin-left: -200px;
-}
-
-.circle {
-    width: 400px;
-    height: 400px;
-    position: relative;
-    border-radius: 999px;
-    box-shadow: inset 0 0 0 50px rgba(255, 255, 255, 0.5);
-}
-
-.l-half, .r-half {
-    float: left;
-    width: 50%;
-    height: 100%;
-    overflow: hidden;
-}
-
-.l-half:before, .r-half:before {
-    content: "";
-    display: block;
-    width: 100%;
-    height: 100%;
-    box-sizing: border-box;
-    border: 50px solid #fff;
-    -webkit-animation-duration: 5s;
-    -webkit-animation-iteration-count: 1;
-    -webkit-animation-timing-function: linear;
-    -webkit-animation-fill-mode: forwards;
-}
-
-.l-half:before {
-    border-right: none;
-    border-top-left-radius: 999px;
-    border-bottom-left-radius: 999px;
-    -webkit-transform-origin: center right;
-    -webkit-animation-name: l-rotate;
-}
-
-.r-half:before {
-    border-left: none;
-    border-top-right-radius: 999px;
-    border-bottom-right-radius: 999px;
-    -webkit-transform-origin: center left;
-    -webkit-animation-name: r-rotate;
-}
-
-.count {
-    position: absolute;
-    width: 100%;
-    line-height: 400px;
-    text-align: center;
-    font-weight: 800;
-    font-size: 150px;
-    font-family: Helvetica;
-    color: #fff;
-    z-index: 2;
-    -webkit-animation: fadeout 0.5s 6s 1 linear;
-    -webkit-animation-fill-mode: forwards;
-}
-
-@-webkit-keyframes l-rotate {
-    0% {
-        -webkit-transform: rotate(0deg);
-    }
-    50% {
-        -webkit-transform: rotate(-180deg);
-    }
-    100% {
-        -webkit-transform: rotate(-180deg);
-    }
-}
-
-@-webkit-keyframes r-rotate {
-    0% {
-        -webkit-transform: rotate(0deg);
-    }
-    50% {
-        -webkit-transform: rotate(0deg);
-    }
-    100% {
-        -webkit-transform: rotate(-180deg);
-    }
-}
-
-@-webkit-keyframes fadeout {
-    0% {
-        opacity: 1;
-    }
-    100% {
-        opacity: 0.5;
-    }
 }
