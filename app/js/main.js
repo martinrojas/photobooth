@@ -80,7 +80,7 @@ jQuery(function($) {
 
 
         streamChange: function() {
-            BOOTH.curStream = $('#camSelect').value;
+            // BOOTH.curStream = $('#camSelect').value;
             BOOTH.getCamera();
         },
 
@@ -95,7 +95,7 @@ jQuery(function($) {
                         minHeight: 720
                     },
                     optional: [{
-                        sourceId: $('#camSelect').value
+                        sourceId: $('#camSelect')[0].value
                     }]
                 },
                 audio: false
@@ -108,7 +108,7 @@ jQuery(function($) {
                 //                stream.onended = function() {};
 
                 videoElm.onplay = function() {
-                    if (BOOTH.curStream !== null) BOOTH.curStream.stop;
+                    // if (BOOTH.curStream !== null) BOOTH.curStream.getTracks()[0].stop();
                     BOOTH.curStream = stream;
                 };
 
@@ -138,7 +138,7 @@ jQuery(function($) {
                                 label: device.label || 'Camera ' + (BOOTH.videoSources.length + 1)
                             });
                             $('<option>').val(device.deviceId).text(device.label).appendTo(ddl);
-                            BOOTH.curStream = BOOTH.videoSources[0].id;
+                            // BOOTH.curStream = BOOTH.videoSources[0].id;
                         }
                     });
                 })
