@@ -1,2 +1,0 @@
-# photobooth
-PhotoBooth application 
