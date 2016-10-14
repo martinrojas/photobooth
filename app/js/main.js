@@ -1,175 +1,129 @@
-/**
- * Grabs the camera feed from the browser, requesting
- * video from the selected device. Requires the permissions
- * for videoCapture to be set in the manifest.
- *
- * @see http://developer.chrome.com/apps/manifest.html#permissions
- */
+jQuery(function ($) {
+    'use strict';
 
-var curStream = null; // keep track of current stream
-var oauth_token, oauth_token_secret;
+    var BOOTH = {
+        curStream: null,
 
-function getCamera() {
-    var cameraSrcId = $('select').value;
-    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
-
-    // constraints allow us to select a specific video source
-    var constraints = {
-        video: {
-            mandatory: {
-                minWidth: 1280,
-                minHeight: 720
-            },
-            optional: [{
-                sourceId: cameraSrcId
-            }]
+        init: function () {
+            BOOTH.bind();
+            BOOTH.getCamera();
         },
-        audio: false
-    }
 
+        bind: function () {
+            $('.modal-trigger').leanModal();
+            $('#snapBtn').on('click', COUNTDOWN.addTimer);
+            BOOTH.canvas = document.getElementById("snapShot").getContext("2d");
+            BOOTH.video = document.getElementById("feed");
 
-    navigator.getUserMedia(constraints, function(stream) {
-        var videoElm = document.querySelector('video');
-        videoElm.src = URL.createObjectURL(stream);
+        },
 
-        stream.onended = function() {
-            updateButtonState();
-        }
+        takePicture: function () {
 
-        videoElm.onplay = function() {
-            if (curStream !== null) {
-                // stop previous stream
-                curStream.stop();
+            BOOTH.canvas.drawImage(BOOTH.video, 0, 0, 1280, 720, 0, 0, 1280, 720);
+            BOOTH.canvas.globalCompositeOperation = "source-over";
+            BOOTH.canvas.drawImage(document.getElementById("logo"), 30, 20, 220, 26);
+
+            //		var img = canvas.toDataURL("image/png");
+            //		document.getElementById('snapShot').src = img;
+            //            $('#pictureTaken').openModal();
+            $('.step1').css('height', 0);
+            $('.step2').css('height', '100vh');
+
+        },
+
+        getCamera: function () {
+            navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
+
+            // constraints allow us to select a specific video source
+            var constraints = {
+                video: {
+                    mandatory: {
+                        minWidth: 1280,
+                        minHeight: 720
+                    }
+                },
+                audio: false
             }
 
-            curStream = stream;
-            updateButtonState();
-        }
-    }, function(e) {
-        curStream = null;
-        console.error(e);
-    });
-}
+            navigator.getUserMedia(constraints, function(stream) {
+                var videoElm = document.querySelector('video');
+                videoElm.src = URL.createObjectURL(stream);
 
+                stream.onended = function() {};
 
+                videoElm.onplay = function() {
+                    if (BOOTH.curStream !== null) BOOTH.curStream.stop();
+                    BOOTH.curStream = stream;
+                };
 
-
-/**
- * Updates button state according to Camera stream status
- */
-
-function updateButtonState() {
-    var btn = $('#camBtn');
-
-    if ((!curStream) || (!curStream.active)) {
-        btn.text("Enable Camera");
-
-    } else {
-        btn.text("Disable Camera");
-
-    }
-}
-
-/**
- * Populate camera sources drop down
- */
-
-getVideoSources(function(cameras) {
-    var ddl = $('select');
-    if (cameras.length == 1) {
-        // if only 1 camera is found drop down can be disabled
-        ddl.disabled = true;
-        //		console.log("Only one camera");
-    }
-
-    cameras.forEach(function(camera) {
-        $('<option>').val(camera.id).text(camera.label).appendTo(ddl);
-
-    });
-});
-
-/**
- * This retrieves video sources and passes them to callback parameter
- */
-
-function getVideoSources(callback) {
-    var videoSources = [];
-    callback = callback || function() {};
-
-    if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
-        console.log("enumerateDevices() not supported.");
-        return;
-    }
-
-    navigator.mediaDevices.enumerateDevices()
-        .then(function(devices) {
-            devices.forEach(function(device) {
-                // console.log(device.kind + ": " + device.label +	" id = " + device.deviceId);
-                if (device.kind === 'videoinput') {
-                    // we only need to enlist video sources
-                    videoSources.push({
-                        id: device.deviceId,
-                        label: device.label || 'Camera ' + (videoSources.length + 1)
-                    });
-                }
-
-                callback(videoSources);
+            }, function(e) {
+                console.error(e);
             });
-        })
-        .catch(function(err) {
-            console.log(err.name + ": " + err.message);
-        });
+        },
 
-    // MediaStreamTrack.enumerateDevices(function(sources){
-    // 	sources.forEach(function(source,index){
-    // 		if(source.kind === 'video') {
-    // 			// we only need to enlist video sources
-    // 			videoSources.push({
-    // 				id: source.id,
-    // 				label: source.label || 'Camera '+(videoSources.length+1)
-    // 			});
-    // 		}
-    // 	});
-    // 	callback(videoSources);
-    // });
-}
+        getVideoSources: function (callback) {
+            var videoSources = [];
+            callback = callback || function() {};
 
-$(function() {
+            if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
+                console.log("enumerateDevices() not supported.");
+                return;
+            }
 
-    $('#camBtn').on('click', function() {
-        // camera is active, stop stream
-        if (curStream && curStream.active) {
-            curStream.getTracks()[0].stop();
-            $('video').src = "";
-        } else {
-            getCamera();
+            navigator.mediaDevices.enumerateDevices()
+                .then(function(devices) {
+                devices.forEach(function(device) {
+                    // console.log(device.kind + ": " + device.label +	" id = " + device.deviceId);
+                    if (device.kind === 'videoinput') {
+                        // we only need to enlist video sources
+                        videoSources.push({
+                            id: device.deviceId,
+                            label: device.label || 'Camera ' + (videoSources.length + 1)
+                        });
+                    }
+
+                    callback(videoSources);
+                });
+            })
+                .catch(function(err) {
+                console.log(err.name + ": " + err.message);
+            });
+
         }
-    });
+    };
 
-    $('#snapBtn').on('click', function() {
-        var canvas = document.getElementById("snapShot").getContext("2d");
-        var video = document.getElementById("feed");
-        canvas.drawImage(video, 0, 0, 1280, 720, 0, 0, 640, 360);
-        canvas.globalCompositeOperation = "source-over";
-        canvas.drawImage(document.getElementById("logo"), 30, 20, 220, 26);
+    var COUNTDOWN = {
+        timerTxt: "<div class='circle center'><div class='count'>4</div><div class='l-half'></div><div class='r-half'></div></div>",
 
-        //		var img = canvas.toDataURL("image/png");
-        //		document.getElementById('snapShot').src = img;
-        $('#pictureTaken').openModal();
+        init: function () {
+            COUNTDOWN.bind();
+            //            COUNTDOWN.addTimer();
+        },
 
-    });
+        bind: function () {
+            COUNTDOWN.$timer = $('.timer');
+        },
 
+        addTimer: function (e) {
+            e.preventDefault();
 
-    /**
-     * Change stream source according to dropdown selection
-     */
-    $('#camSelect').on('change', function() {
-        if (curStream && curStream.active) {
-            getCamera();
+            COUNTDOWN.$timer.html(COUNTDOWN.timerTxt);
+            COUNTDOWN.timeVal = 4;
+            COUNTDOWN.$interval = setInterval(COUNTDOWN.tick, 1000);
+        },
+
+        tick: function () {
+            console.log(COUNTDOWN.timeVal);
+            if (COUNTDOWN.timeVal >= 0) { $('.count').html(COUNTDOWN.timeVal); }
+            if (COUNTDOWN.timeVal === 0) { 
+                clearInterval(COUNTDOWN.$interval);
+                BOOTH.takePicture(); 
+                COUNTDOWN.$timer.html('');
+            }
+            COUNTDOWN.timeVal--;
         }
-    });
+    };
 
-    $('.modal-trigger').leanModal();
-
-    getCamera();
-});
+    COUNTDOWN.init();
+    BOOTH.init();
+}($));
