@@ -76,20 +76,12 @@ jQuery(function($) {
             BOOTH.canvas[BOOTH.snap].globalCompositeOperation = "source-over";
             BOOTH.canvas[BOOTH.snap].drawImage(document.getElementById('moji' + BOOTH.snap), 0, 0, 1280, 720, 0, 0, 1280, 720);
 
-            //		var img = canvas.toDataURL("image/png");
-            //		document.getElementById('snapShot').src = img;
-            //            $('#pictureTaken').openModal();
-
-
         },
 
 
         streamChange: function() {
             BOOTH.curStream = $('#camSelect').value;
-            if (BOOTH.curStream && BOOTH.curStream.active) {
-
-                BOOTH.getCamera();
-            }
+            BOOTH.getCamera();
         },
 
         getCamera: function() {
@@ -103,7 +95,7 @@ jQuery(function($) {
                         minHeight: 720
                     },
                     optional: [{
-                      sourceId: $('#camSelect').value
+                        sourceId: $('#camSelect').value
                     }]
                 },
                 audio: false
